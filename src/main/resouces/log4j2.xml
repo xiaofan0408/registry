@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="INFO">
+    <Properties>
+        <Property name="LOG_HOME">./logs</Property>
+    </Properties>
+    <appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level - %msg - [%logger{36}:%M:%L] %n" />
+        </Console>
+        <!-- 主日志文件 -->
+        <RollingFile name="RoFile" fileName="${LOG_HOME}/info.log"
+                     filePattern="${LOG_HOME}/$${date:yyyy-MM-dd}/MainServer-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{yyyy.MM.dd HH:mm:ss.SSS} [%t] %-5level - %msg - [%logger{36}:%M:%L] %n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="250 MB" />
+            </Policies>
+            <!-- 最大保留10个文件 -->
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+    </appenders>
+    <loggers>
+        <Logger name="org.springframework" level="INFO" additivity="true">
+            <AppenderRef ref="STDOUT" />
+        </Logger>
+        <Logger name="org.apache.ibatis" level="DEBUG" additivity="true">
+            <AppenderRef ref="STDOUT" />
+        </Logger>
+        <Logger name="java.sql.Connection" level="DEBUG" additivity="true">
+            <AppenderRef ref="STDOUT" />
+        </Logger>
+        <Logger name="java.sql.PreparedStatement" level="DEBUG" additivity="true">
+            <AppenderRef ref="STDOUT" />
+        </Logger>
+        <Logger name="java.sql.ResultSet" level="DEBUG" additivity="true">
+            <AppenderRef ref="STDOUT" />
+        </Logger>
+        <root level="INFO">
+            <appender-ref ref="RoFile" />
+            <appender-ref ref="STDOUT" />
+        </root>
+    </loggers>
+</configuration>
